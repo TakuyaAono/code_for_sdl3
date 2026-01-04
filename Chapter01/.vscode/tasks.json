@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "clang++",
+            "args": [
+                "-std=c++20",
+                "-Wall",
+			    "-fcolor-diagnostics",
+			    "-fansi-escape-codes",
+                "-g",
+                "${workspaceFolder}/Main.cpp",
+                "${workspaceFolder}/Game.cpp",
+                
+                "-IC:/msys64/clang64/include/SDL3",
+                "-LC:/msys64/clang64/lib",
+                "-lSDL3",
+                "-o",
+                "${workspaceFolder}/Game.exe"
+            ],
+            "group": {
+                "kind": "build",
+            },
+        }
+    ]
+}

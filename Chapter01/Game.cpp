@@ -24,41 +24,27 @@ Game::Game()
 bool Game::Initialize()
 {
 	// Initialize SDL
-	int sdlResult = SDL_Init(SDL_INIT_VIDEO);
-	if (sdlResult != 0)
+	if (!SDL_Init(SDL_INIT_VIDEO))
 	{
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
 	
 	// Create an SDL Window
-	mWindow = SDL_CreateWindow(
-		"Game Programming in C++ (Chapter 1)", // Window title
-		100,	// Top left x-coordinate of window
-		100,	// Top left y-coordinate of window
-		1024,	// Width of window
-		768,	// Height of window
-		0		// Flags (0 for no flags set)
-	);
-
-	if (!mWindow)
-	{
-		SDL_Log("Failed to create window: %s", SDL_GetError());
+	if (!SDL_CreateWindowAndRenderer(
+			"Game Programming in C++ (Chapter 1)", // Window title
+			1024,	// Width of window
+			768,	// Height of window
+			0,		// Flags (0 for no flags set)
+			&mWindow,
+			&mRenderer
+	)) {
+		SDL_Log("Failed to create window and renderer: %s", SDL_GetError());
 		return false;
 	}
-	
-	//// Create SDL renderer
-	mRenderer = SDL_CreateRenderer(
-		mWindow, // Window to create renderer for
-		-1,		 // Usually -1
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-	);
+	// Move the window
+	SDL_SetWindowPosition(mWindow, 100, 100);
 
-	if (!mRenderer)
-	{
-		SDL_Log("Failed to create renderer: %s", SDL_GetError());
-		return false;
-	}
 	//
 	mPaddlePos.x = 10.0f;
 	mPaddlePos.y = 768.0f/2.0f;
@@ -87,14 +73,14 @@ void Game::ProcessInput()
 		switch (event.type)
 		{
 			// If we get an SDL_QUIT event, end loop
-			case SDL_QUIT:
+			case SDL_EVENT_QUIT:
 				mIsRunning = false;
 				break;
 		}
 	}
 	
 	// Get state of keyboard
-	const Uint8* state = SDL_GetKeyboardState(NULL);
+	const bool* state = SDL_GetKeyboardState(nullptr);
 	// If escape is pressed, also end loop
 	if (state[SDL_SCANCODE_ESCAPE])
 	{
@@ -116,7 +102,7 @@ void Game::ProcessInput()
 void Game::UpdateGame()
 {
 	// Wait until 16ms has elapsed since last frame
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
+	while (SDL_GetTicks() < mTicksCount + 16)
 		;
 
 	// Delta time is the difference in ticks from last frame
@@ -208,7 +194,7 @@ void Game::GenerateOutput()
 	SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
 	
 	// Draw top wall
-	SDL_Rect wall{
+	SDL_FRect wall{
 		0,			// Top left x
 		0,			// Top left y
 		1024,		// Width
@@ -228,18 +214,18 @@ void Game::GenerateOutput()
 	SDL_RenderFillRect(mRenderer, &wall);
 	
 	// Draw paddle
-	SDL_Rect paddle{
-		static_cast<int>(mPaddlePos.x),
-		static_cast<int>(mPaddlePos.y - paddleH/2),
+	SDL_FRect paddle{
+		mPaddlePos.x,
+		mPaddlePos.y - paddleH/2,
 		thickness,
-		static_cast<int>(paddleH)
+		paddleH
 	};
 	SDL_RenderFillRect(mRenderer, &paddle);
 	
 	// Draw ball
-	SDL_Rect ball{	
-		static_cast<int>(mBallPos.x - thickness/2),
-		static_cast<int>(mBallPos.y - thickness/2),
+	SDL_FRect ball{	
+		mBallPos.x - thickness/2,
+		mBallPos.y - thickness/2,
 		thickness,
 		thickness
 	};
