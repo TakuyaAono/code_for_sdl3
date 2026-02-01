@@ -29,16 +29,17 @@ void SpriteComponent::Draw(SDL_Renderer* renderer)
 {
 	if (mTexture)
 	{
-		SDL_Rect r;
+		SDL_FRect r;
 		// Scale the width/height by owner's scale
-		r.w = static_cast<int>(mTexWidth * mOwner->GetScale());
-		r.h = static_cast<int>(mTexHeight * mOwner->GetScale());
+		r.w = static_cast<float>(mTexWidth * mOwner->GetScale());
+		r.h = static_cast<float>(mTexHeight * mOwner->GetScale());
 		// Center the rectangle around the position of the owner
-		r.x = static_cast<int>(mOwner->GetPosition().x - r.w / 2);
-		r.y = static_cast<int>(mOwner->GetPosition().y - r.h / 2);
+		r.x = static_cast<float>(mOwner->GetPosition().x - r.w / 2);
+		r.y = static_cast<float>(mOwner->GetPosition().y - r.h / 2);
 
 		// Draw (have to convert angle from radians to degrees, and clockwise to counter)
-		SDL_RenderCopyEx(renderer,
+		SDL_RenderTextureRotated(
+			renderer,
 			mTexture,
 			nullptr,
 			&r,
@@ -52,5 +53,8 @@ void SpriteComponent::SetTexture(SDL_Texture* texture)
 {
 	mTexture = texture;
 	// Set width/height
-	SDL_QueryTexture(texture, nullptr, nullptr, &mTexWidth, &mTexHeight);
+	float width, height;
+	SDL_GetTextureSize(texture, &width, &height);
+	mTexWidth = static_cast<int>(width);
+	mTexHeight = static_cast<int>(height);
 }

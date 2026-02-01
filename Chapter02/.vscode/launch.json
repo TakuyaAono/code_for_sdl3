@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Chapter01",
+      "name": "Chapter02",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/Game.exe",

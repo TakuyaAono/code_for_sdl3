@@ -7,7 +7,7 @@ the code in the External directory. Each External project is licensed separately
 
 # Building the Code
 ~~Each chapter's code is tested and works on both Microsoft Windows and Apple macOS.~~
-Chapter 01's code is tested and works on both Microsoft Windows.
+Chapter 01-02's code is tested and works on both Microsoft Windows.
 
 To compile on Windows, install MSYS2.
 (https://www.msys2.org/#installation/).
@@ -19,6 +19,7 @@ pacman -Syu
 pacman -S mingw-w64-clang-x86_64-toolchain
 pacman -S mingw-w64-x86_64-gdb
 pacman -S mingw-w64-clang-x86_64-sdl3
+pacman -S mingw-w64-clang-x86_64-sdl3-image
 ```
 
 Add it to the PATH setting in the environment settings.
