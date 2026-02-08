@@ -35,7 +35,7 @@ void Ship::UpdateActor(float deltaTime)
 	mLaserCooldown -= deltaTime;
 }
 
-void Ship::ActorInput(const uint8_t* keyState)
+void Ship::ActorInput(const bool* keyState)
 {
 	if (keyState[SDL_SCANCODE_SPACE] && mLaserCooldown <= 0.0f)
 	{

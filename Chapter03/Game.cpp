@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------
 
 #include "Game.h"
-#include "SDL/SDL_image.h"
+#include "SDL3_image/SDL_image.h"
 #include <algorithm>
 #include "Actor.h"
 #include "SpriteComponent.h"
@@ -26,27 +26,29 @@ Game::Game()
 
 bool Game::Initialize()
 {
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0)
+	if (!SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO))
 	{
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return false;
 	}
-	
-	mWindow = SDL_CreateWindow("Game Programming in C++ (Chapter 3)", 100, 100, 1024, 768, 0);
-	if (!mWindow)
-	{
-		SDL_Log("Failed to create window: %s", SDL_GetError());
+
+			// Create an SDL Window
+	if (!SDL_CreateWindowAndRenderer(
+			"Game Programming in C++ (Chapter 3)", // Window title
+			1024,	// Width of window
+			768,	// Height of window
+			0,		// Flags (0 for no flags set)
+			&mWindow,
+			&mRenderer
+	)) {
+		SDL_Log("Failed to create window and renderer: %s", SDL_GetError());
 		return false;
 	}
+	// Move the window
+	SDL_SetWindowPosition(mWindow, 100, 100);
+	SDL_SetRenderVSync(mRenderer, 1);
 	
-	mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (!mRenderer)
-	{
-		SDL_Log("Failed to create renderer: %s", SDL_GetError());
-		return false;
-	}
-	
-	if (IMG_Init(IMG_INIT_PNG) == 0)
+	if (!SDL_Init(SDL_INIT_VIDEO))
 	{
 		SDL_Log("Unable to initialize SDL_image: %s", SDL_GetError());
 		return false;
@@ -78,13 +80,13 @@ void Game::ProcessInput()
 	{
 		switch (event.type)
 		{
-			case SDL_QUIT:
+			case SDL_EVENT_QUIT:
 				mIsRunning = false;
 				break;
 		}
 	}
 	
-	const Uint8* keyState = SDL_GetKeyboardState(NULL);
+	const bool* keyState = SDL_GetKeyboardState(nullptr);
 	if (keyState[SDL_SCANCODE_ESCAPE])
 	{
 		mIsRunning = false;
@@ -102,7 +104,7 @@ void Game::UpdateGame()
 {
 	// Compute delta time
 	// Wait until 16ms has elapsed since last frame
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
+	while (SDL_GetTicks() < mTicksCount + 16)
 		;
 
 	float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
@@ -211,7 +213,7 @@ SDL_Texture* Game::GetTexture(const std::string& fileName)
 
 		// Create texture from surface
 		tex = SDL_CreateTextureFromSurface(mRenderer, surf);
-		SDL_FreeSurface(surf);
+		SDL_DestroySurface(surf);
 		if (!tex)
 		{
 			SDL_Log("Failed to convert surface to texture for %s", fileName.c_str());
@@ -241,7 +243,7 @@ void Game::RemoveAsteroid(Asteroid* ast)
 void Game::Shutdown()
 {
 	UnloadData();
-	IMG_Quit();
+	//IMG_Quit();
 	SDL_DestroyRenderer(mRenderer);
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
