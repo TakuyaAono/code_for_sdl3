@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "clang++",
+            "args": [
+                "-std=c++20",
+                "-Wall",
+			    "-fcolor-diagnostics",
+			    "-fansi-escape-codes",
+                "-g",
+                "${workspaceFolder}/Actor.cpp",
+                "${workspaceFolder}/AIComponent.cpp",
+                "${workspaceFolder}/AIState.cpp",
+                "${workspaceFolder}/Bullet.cpp",
+                "${workspaceFolder}/CircleComponent.cpp",
+                "${workspaceFolder}/Component.cpp",
+                "${workspaceFolder}/Enemy.cpp",
+                "${workspaceFolder}/Game.cpp",
+                "${workspaceFolder}/Grid.cpp",
+                "${workspaceFolder}/Main.cpp",
+                "${workspaceFolder}/Math.cpp",
+                "${workspaceFolder}/MoveComponent.cpp",
+                "${workspaceFolder}/NavComponent.cpp",
+                "${workspaceFolder}/Search.cpp",
+                "${workspaceFolder}/SpriteComponent.cpp",
+                "${workspaceFolder}/Tile.cpp",
+                "${workspaceFolder}/Tower.cpp",
+                                
+                "-IC:/msys64/clang64/include/SDL3",
+                "-LC:/msys64/clang64/lib",
+                "-lSDL3",
+                "-lSDL3_image",
+                "-o",
+                "${workspaceFolder}/Game.exe"
+            ],
+            "group": {
+                "kind": "build",
+            },
+        }
+    ]
+}
