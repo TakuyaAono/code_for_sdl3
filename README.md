@@ -7,7 +7,7 @@ the code in the External directory. Each External project is licensed separately
 
 # Building the Code
 ~~Each chapter's code is tested and works on both Microsoft Windows and Apple macOS.~~
-Chapter 01-04's code is tested and works on both Microsoft Windows.
+Chapter 01-04's code is tested and works on Microsoft Windows.
 
 To compile on Windows, install MSYS2.
 (https://www.msys2.org/#installation/).
